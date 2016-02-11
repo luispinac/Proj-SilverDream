@@ -6,9 +6,9 @@
 			<?php echo h($product['Product']['id']); ?>
 			&nbsp;
 		</dd>
-		<dt><?php echo __('Name'); ?></dt>
+		<dt><?php echo __('Code'); ?></dt>
 		<dd>
-			<?php echo h($product['Product']['name']); ?>
+			<?php echo h($product['Product']['code']); ?>
 			&nbsp;
 		</dd>
 		<dt><?php echo __('Description'); ?></dt>

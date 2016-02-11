@@ -1,22 +1,20 @@
-<div class="users form">
-<?php echo $this->Form->create('User'); ?>
-	<fieldset>
-		<legend><?php echo __('Edit User'); ?></legend>
-	<?php
-		echo $this->Form->input('id');
-		echo $this->Form->input('fullname');
-		echo $this->Form->input('username');
-		echo $this->Form->input('password');
-		echo $this->Form->input('role');
-	?>
-	</fieldset>
-<?php echo $this->Form->end(__('Submit')); ?>
+<div class="container">
+	<div class="row">
+		<div class="col-md-6">
+			<?php echo $this->Form->create('User', array('type' => 'file', 'novalidate' => 'novalidate' )); ?>
+				<fieldset>
+					<legend><?php echo __('Editar usuarios'); ?></legend>
+				<?php
+					echo $this->Form->input('id');
+					echo $this->Form->input('fullname', array('class' => 'form-control', 'label' => 'Nombre'));
+					echo $this->Form->input('username', array('class' => 'form-control', 'label' => 'Username'));
+					echo $this->Form->input('role', array('class' => 'form-control', 'label' => 'Rol', 'type' => 'select', 'options' => array('admin' => 'Administrador', 'user' => 'Usuario')));
+				?>
+				</fieldset>
+				<p>
+					<?php echo $this->Form->end(array('label' => 'Editar Usuario', 'class' =>'btn btn-success')); ?>
+				</p>
+		</div>
+	</div>
 </div>
-<div class="actions">
-	<h3><?php echo __('Actions'); ?></h3>
-	<ul>
 
-		<li><?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $this->Form->value('User.id')), array('confirm' => __('Are you sure you want to delete # %s?', $this->Form->value('User.id')))); ?></li>
-		<li><?php echo $this->Html->link(__('List Users'), array('action' => 'index')); ?></li>
-	</ul>
-</div>

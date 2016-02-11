@@ -36,7 +36,7 @@ class ClientsController extends AppController {
  */
 	public function view($id = null) {
 		if (!$this->Client->exists($id)) {
-			throw new NotFoundException(__('Invalid client'));
+			throw new NotFoundException(__('Cliente inválido'));
 		}
 		$options = array('conditions' => array('Client.' . $this->Client->primaryKey => $id));
 		$this->set('client', $this->Client->find('first', $options));
@@ -51,10 +51,10 @@ class ClientsController extends AppController {
 		if ($this->request->is('post')) {
 			$this->Client->create();
 			if ($this->Client->save($this->request->data)) {
-				$this->Flash->success(__('The client has been saved.'));
+				$this->Flash->success(__('El cliente ha sido registrado.'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
-				$this->Flash->error(__('The client could not be saved. Please, try again.'));
+				$this->Flash->error(__('El cliente no pudo ser registrado.'));
 			}
 		}
 	}
@@ -68,14 +68,14 @@ class ClientsController extends AppController {
  */
 	public function edit($id = null) {
 		if (!$this->Client->exists($id)) {
-			throw new NotFoundException(__('Invalid client'));
+			throw new NotFoundException(__('Cliente inválido'));
 		}
 		if ($this->request->is(array('post', 'put'))) {
 			if ($this->Client->save($this->request->data)) {
-				$this->Flash->success(__('The client has been saved.'));
+				$this->Flash->success(__('El cliente ha sido registrado.'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
-				$this->Flash->error(__('The client could not be saved. Please, try again.'));
+				$this->Flash->error(__('El cliente no pudo ser registrado.'));
 			}
 		} else {
 			$options = array('conditions' => array('Client.' . $this->Client->primaryKey => $id));
@@ -93,13 +93,13 @@ class ClientsController extends AppController {
 	public function delete($id = null) {
 		$this->Client->id = $id;
 		if (!$this->Client->exists()) {
-			throw new NotFoundException(__('Invalid client'));
+			throw new NotFoundException(__('Cliente inválido'));
 		}
 		$this->request->allowMethod('post', 'delete');
 		if ($this->Client->delete()) {
-			$this->Flash->success(__('The client has been deleted.'));
+			$this->Flash->success(__('El cliente ha sido eliminado.'));
 		} else {
-			$this->Flash->error(__('The client could not be deleted. Please, try again.'));
+			$this->Flash->error(__('El cliente no pudo ser eliminado.'));
 		}
 		return $this->redirect(array('action' => 'index'));
 	}

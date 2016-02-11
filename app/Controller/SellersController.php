@@ -36,7 +36,7 @@ class SellersController extends AppController {
  */
 	public function view($id = null) {
 		if (!$this->Seller->exists($id)) {
-			throw new NotFoundException(__('Invalid seller'));
+			throw new NotFoundException(__('Vendedor inválido'));
 		}
 		$options = array('conditions' => array('Seller.' . $this->Seller->primaryKey => $id));
 		$this->set('seller', $this->Seller->find('first', $options));
@@ -51,10 +51,10 @@ class SellersController extends AppController {
 		if ($this->request->is('post')) {
 			$this->Seller->create();
 			if ($this->Seller->save($this->request->data)) {
-				$this->Flash->success(__('The seller has been saved.'));
+				$this->Flash->success(__('El vendedor ha sido registrado.'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
-				$this->Flash->error(__('The seller could not be saved. Please, try again.'));
+				$this->Flash->error(__('El vendedor no pudo ser registrado.'));
 			}
 		}
 	}
@@ -68,14 +68,14 @@ class SellersController extends AppController {
  */
 	public function edit($id = null) {
 		if (!$this->Seller->exists($id)) {
-			throw new NotFoundException(__('Invalid seller'));
+			throw new NotFoundException(__('Vendedor inválido'));
 		}
 		if ($this->request->is(array('post', 'put'))) {
 			if ($this->Seller->save($this->request->data)) {
-				$this->Flash->success(__('The seller has been saved.'));
+				$this->Flash->success(__('El vendedor ha sido registrado.'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
-				$this->Flash->error(__('The seller could not be saved. Please, try again.'));
+				$this->Flash->error(__('El vendedor no pudo ser registrado.'));
 			}
 		} else {
 			$options = array('conditions' => array('Seller.' . $this->Seller->primaryKey => $id));
@@ -93,13 +93,13 @@ class SellersController extends AppController {
 	public function delete($id = null) {
 		$this->Seller->id = $id;
 		if (!$this->Seller->exists()) {
-			throw new NotFoundException(__('Invalid seller'));
+			throw new NotFoundException(__('Vendedor inválido'));
 		}
 		$this->request->allowMethod('post', 'delete');
 		if ($this->Seller->delete()) {
-			$this->Flash->success(__('The seller has been deleted.'));
+			$this->Flash->success(__('El vendedor ha sido eliminado.'));
 		} else {
-			$this->Flash->error(__('The seller could not be deleted. Please, try again.'));
+			$this->Flash->error(__('El vendedor no pudo ser eliminado.'));
 		}
 		return $this->redirect(array('action' => 'index'));
 	}

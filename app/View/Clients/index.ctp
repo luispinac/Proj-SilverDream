@@ -1,17 +1,23 @@
-<div class="clients index">
-	<h2><?php echo __('Clients'); ?></h2>
-	<table cellpadding="0" cellspacing="0">
+<div class="page-header">
+
+	<h2><?php echo __('Clientes'); ?></h2>
+
+</div>
+
+<div class="col-md-12">
+
+	<table class="table table-striped">
 	<thead>
 	<tr>
-			<th><?php echo $this->Paginator->sort('id'); ?></th>
-			<th><?php echo $this->Paginator->sort('rut'); ?></th>
-			<th><?php echo $this->Paginator->sort('first_name'); ?></th>
-			<th><?php echo $this->Paginator->sort('last_name'); ?></th>
-			<th><?php echo $this->Paginator->sort('email'); ?></th>
-			<th><?php echo $this->Paginator->sort('phone'); ?></th>
-			<th><?php echo $this->Paginator->sort('created'); ?></th>
-			<th><?php echo $this->Paginator->sort('modified'); ?></th>
-			<th class="actions"><?php echo __('Actions'); ?></th>
+		<th><?php echo $this->Paginator->sort('id'); ?></th>
+		<th><?php echo $this->Paginator->sort('rut', 'RUT'); ?></th>
+		<th><?php echo $this->Paginator->sort('first_name', 'Nombre'); ?></th>
+		<th><?php echo $this->Paginator->sort('last_name', 'Apellidos'); ?></th>
+		<th><?php echo $this->Paginator->sort('email', 'E-mail'); ?></th>
+		<th><?php echo $this->Paginator->sort('phone', 'Teléfono'); ?></th>
+		<th><?php echo $this->Paginator->sort('created', 'Creado'); ?></th>
+		<th><?php echo $this->Paginator->sort('modified', 'Modificado'); ?></th>
+		<th class="actions"><?php echo __('Actions'); ?></th>
 	</tr>
 	</thead>
 	<tbody>
@@ -26,31 +32,25 @@
 		<td><?php echo h($client['Client']['created']); ?>&nbsp;</td>
 		<td><?php echo h($client['Client']['modified']); ?>&nbsp;</td>
 		<td class="actions">
-			<?php echo $this->Html->link(__('View'), array('action' => 'view', $client['Client']['id'])); ?>
-			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $client['Client']['id'])); ?>
-			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $client['Client']['id']), array('confirm' => __('Are you sure you want to delete # %s?', $client['Client']['id']))); ?>
+			<?php echo $this->Html->link(__('Ver'), array('action' => 'view', $client['Client']['id'])); ?>
+			<?php echo $this->Html->link(__('Editar'), array('action' => 'edit', $client['Client']['id'])); ?>
+			<?php echo $this->Form->postLink(__('Eliminar'), array('action' => 'delete', $client['Client']['id']), array('confirm' => __('Are you sure you want to delete # %s?', $client['Client']['id']))); ?>
 		</td>
 	</tr>
 <?php endforeach; ?>
 	</tbody>
 	</table>
+</div>
 	<p>
 	<?php
 	echo $this->Paginator->counter(array(
-		'format' => __('Page {:page} of {:pages}, showing {:current} records out of {:count} total, starting on record {:start}, ending on {:end}')
+	'format' => __('Página {:page} de {:pages}, mostrando {:current} registros de un total de {:count}, comenzando en el registro {:start}, finalizando en el {:end}')
 	));
 	?>	</p>
-	<div class="paging">
-	<?php
-		echo $this->Paginator->prev('< ' . __('previous'), array(), null, array('class' => 'prev disabled'));
-		echo $this->Paginator->numbers(array('separator' => ''));
-		echo $this->Paginator->next(__('next') . ' >', array(), null, array('class' => 'next disabled'));
-	?>
-	</div>
-</div>
-<div class="actions">
-	<h3><?php echo __('Actions'); ?></h3>
-	<ul>
-		<li><?php echo $this->Html->link(__('New Client'), array('action' => 'add')); ?></li>
+<nav>
+	<ul class="pagination">
+		<li> <?php echo $this->Paginator->prev('< ' . __('anterior'), array('tag' => false), null, array('class' => 'prev disabled')); ?> </li>
+		<?php echo $this->Paginator->numbers(array('separator' => '', 'tag' => 'li', 'currentTag' => 'a', 'currentClass' => 'active')); ?>
+		<li> <?php echo $this->Paginator->next(__('siguiente') . ' >', array('tag' => false), null, array('class' => 'next disabled')); ?> </li>
 	</ul>
-</div>
+</nav>

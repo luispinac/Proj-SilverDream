@@ -24,6 +24,7 @@ class ProductsController extends AppController {
  */
 	public function index() {
 		$this->Product->recursive = 0;
+		$this->Paginator->settings = array('limit' => 3);
 		$this->set('products', $this->Paginator->paginate());
 	}
 
@@ -36,7 +37,7 @@ class ProductsController extends AppController {
  */
 	public function view($id = null) {
 		if (!$this->Product->exists($id)) {
-			throw new NotFoundException(__('Invalid product'));
+			throw new NotFoundException(__('Producto inválido'));
 		}
 		$options = array('conditions' => array('Product.' . $this->Product->primaryKey => $id));
 		$this->set('product', $this->Product->find('first', $options));
@@ -51,10 +52,10 @@ class ProductsController extends AppController {
 		if ($this->request->is('post')) {
 			$this->Product->create();
 			if ($this->Product->save($this->request->data)) {
-				$this->Flash->success(__('The product has been saved.'));
+				$this->Flash->success(__('El producto ha sido registrado.'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
-				$this->Flash->error(__('The product could not be saved. Please, try again.'));
+				$this->Flash->error(__('El producto no pudo ser registrado.'));
 			}
 		}
 		$categories = $this->Product->Category->find('list');
@@ -70,14 +71,14 @@ class ProductsController extends AppController {
  */
 	public function edit($id = null) {
 		if (!$this->Product->exists($id)) {
-			throw new NotFoundException(__('Invalid product'));
+			throw new NotFoundException(__('Producto inválido'));
 		}
 		if ($this->request->is(array('post', 'put'))) {
 			if ($this->Product->save($this->request->data)) {
-				$this->Flash->success(__('The product has been saved.'));
+				$this->Flash->success(__('El producto ha sido registrado.'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
-				$this->Flash->error(__('The product could not be saved. Please, try again.'));
+				$this->Flash->error(__('El producto no pudo ser registrado.'));
 			}
 		} else {
 			$options = array('conditions' => array('Product.' . $this->Product->primaryKey => $id));
@@ -97,14 +98,50 @@ class ProductsController extends AppController {
 	public function delete($id = null) {
 		$this->Product->id = $id;
 		if (!$this->Product->exists()) {
-			throw new NotFoundException(__('Invalid product'));
+			throw new NotFoundException(__('Producto inválido'));
 		}
 		$this->request->allowMethod('post', 'delete');
 		if ($this->Product->delete()) {
-			$this->Flash->success(__('The product has been deleted.'));
+			$this->Flash->success(__('El producto ha sido eliminado.'));
 		} else {
-			$this->Flash->error(__('The product could not be deleted. Please, try again.'));
+			$this->Flash->error(__('El producto no pudo ser eliminado.'));
 		}
 		return $this->redirect(array('action' => 'index'));
+	}
+	
+	public function search()
+	{
+		$search = null;
+		if(!empty($this->request->query['search']))
+		{
+			$search = $this->request->query['search'];
+			$search = preg_replace('/[^a-zA-ZñÑáéíóúÁÉÍÓÚ0-9 ]/', '', $search);
+			$terms = explode(' ', trim($search));
+			$terms = array_diff($terms, array(''));
+			
+			foreach($terms as $term)
+			{
+				$terms1[] = preg_replace('/[^a-zA-ZñÑáéíóúÁÉÍÓÚ0-9 ]/', '', $term);
+				$conditions[] = array('Platillo.nombre LIKE' => '%' . $term . '%');
+			}
+			$platillos = $this->Platillo->find('all', array('recursive' => -1, 'conditions' => $conditions, 'limit' => 200));
+			if(count($platillos) == 1)
+			{
+				return $this->redirect(array('controller' => 'platillos', 'action' => 'view', $platillos[0]['Platillo']['id']));
+			}
+			$terms1 = array_diff($terms1, array(''));
+			$this->set(compact('platillos', 'terms1'));
+		}
+		$this->set(compact('search'));
+		
+		if($this->request->is('ajax'))
+		{
+			$this->layout = false;
+			$this->set('ajax', 1);
+		}
+		else
+		{
+			$this->set('ajax', 0);
+		}
 	}
 }

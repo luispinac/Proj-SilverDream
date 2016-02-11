@@ -1,20 +1,23 @@
-<div class="users form">
-<?php echo $this->Form->create('User'); ?>
-	<fieldset>
-		<legend><?php echo __('Add User'); ?></legend>
-	<?php
-		echo $this->Form->input('fullname');
-		echo $this->Form->input('username');
-		echo $this->Form->input('password');
-		echo $this->Form->input('role');
-	?>
-	</fieldset>
-<?php echo $this->Form->end(__('Submit')); ?>
-</div>
-<div class="actions">
-	<h3><?php echo __('Actions'); ?></h3>
-	<ul>
+<div class="container">
+	<div class="row">
+		<div class="col-md-6">
+			<?php echo $this->Form->create('User', array('role' => 'form', 'novalidate' => 'novalidate')); ?>
+				<fieldset>
+					<legend><?php echo __('Agregar Usuario'); ?></legend>
+				<?php
+					echo $this->Form->input('id');
+					echo $this->Form->input('fullname', array('class' => 'form-control', 'label' => 'Nombre'));
+					echo $this->Form->input('username', array('class' => 'form-control', 'label' => 'Username'));
+					echo $this->Form->input('password', array('class' => 'form-control', 'label' => 'Contraseña'));
+					echo $this->Form->input('role', array('class' => 'form-control', 'label' => 'Rol', 'type' => 'select', 'options' => array('admin' => 'Administrador', 'user' => 'Usuario')));
 
-		<li><?php echo $this->Html->link(__('List Users'), array('action' => 'index')); ?></li>
-	</ul>
+				?>
+				</fieldset>
+				<p>
+				<?php echo $this->Form->end(array('label' => 'Crear Usuario', 'class' =>'btn btn-success')); ?>
+				</p>
+			
+		</div>
+	</div>
 </div>
+

@@ -1,5 +1,5 @@
-<div class="sellers view">
-<h2><?php echo __('Seller'); ?></h2>
+<div class="well">
+<h2><?php echo __('Vendedor'); ?></h2>
 	<dl>
 		<dt><?php echo __('Id'); ?></dt>
 		<dd>
@@ -11,34 +11,25 @@
 			<?php echo h($seller['Seller']['rut']); ?>
 			&nbsp;
 		</dd>
-		<dt><?php echo __('First Name'); ?></dt>
+		<dt><?php echo __('Nombre'); ?></dt>
 		<dd>
 			<?php echo h($seller['Seller']['first_name']); ?>
 			&nbsp;
 		</dd>
-		<dt><?php echo __('Last Name'); ?></dt>
+		<dt><?php echo __('Apellidos'); ?></dt>
 		<dd>
 			<?php echo h($seller['Seller']['last_name']); ?>
 			&nbsp;
 		</dd>
-		<dt><?php echo __('Created'); ?></dt>
+		<dt><?php echo __('Creado'); ?></dt>
 		<dd>
 			<?php echo h($seller['Seller']['created']); ?>
 			&nbsp;
 		</dd>
-		<dt><?php echo __('Modified'); ?></dt>
+		<dt><?php echo __('Modificado'); ?></dt>
 		<dd>
 			<?php echo h($seller['Seller']['modified']); ?>
 			&nbsp;
 		</dd>
 	</dl>
-</div>
-<div class="actions">
-	<h3><?php echo __('Actions'); ?></h3>
-	<ul>
-		<li><?php echo $this->Html->link(__('Edit Seller'), array('action' => 'edit', $seller['Seller']['id'])); ?> </li>
-		<li><?php echo $this->Form->postLink(__('Delete Seller'), array('action' => 'delete', $seller['Seller']['id']), array('confirm' => __('Are you sure you want to delete # %s?', $seller['Seller']['id']))); ?> </li>
-		<li><?php echo $this->Html->link(__('List Sellers'), array('action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Seller'), array('action' => 'add')); ?> </li>
-	</ul>
 </div>
