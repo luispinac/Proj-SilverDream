@@ -35,11 +35,22 @@ class SalesController extends AppController {
  * @return void
  */
 	public function view($id = null) {
-		if (!$this->Sale->exists($id)) {
-			throw new NotFoundException(__('Venta inválida'));
-		}
-		$options = array('conditions' => array('Sale.' . $this->Sale->primaryKey => $id));
-		$this->set('sale', $this->Sale->find('first', $options));
+		
+		$res_pedidos = $this->Sale->find('all');
+        
+        if(count($res_pedidos) == 0)
+        {
+            $this->Session->setFlash('Aún no se realizaron pedidos', 'default', array('class' => 'alert alert-warning'));
+            return $this->redirect(array('controller' => 'products', 'action' => 'index'));
+        }
+        
+        
+        $this->set('ventas', $this->Sale->find('all', array('order' => 'Sale.id ASC')));
+        
+        $total_pedidos = $this->Sale->find('all', array('fields' => array('SUM(Sale.subtotal) as subtotal')));
+        $mostrar_total_pedidos = $total_pedidos[0][0]['subtotal'];
+        
+        $this->set('total_ventas', $mostrar_total_pedidos);
 	}
 
 /**
@@ -48,17 +59,30 @@ class SalesController extends AppController {
  * @return void
  */
 	public function add() {
-		if ($this->request->is('post')) {
-			$this->Sale->create();
-			if ($this->Sale->save($this->request->data)) {
-				$this->Flash->success(__('La venta ha sido registrada.'));
-				return $this->redirect(array('action' => 'index'));
-			} else {
-				$this->Flash->error(__('La venta no pudo ser registrada.'));
-			}
-		}
-		$products = $this->Sale->Product->find('list');
-		$this->set(compact('products'));
+		
+		if($this->request->is('ajax'))
+        {
+            $id = $this->request->data['id'];
+            $cantidad = $this->request->data['cantidad'];
+            
+            $product = $this->Sale->Product->find('all', array('fields' => array('Product.price'), 'conditions' => array('Product.id' => $id)));
+            
+            $precio = $product[0]['Product']['price'];
+            
+            $subtotal = $cantidad * $precio;
+            
+            $sale = array( 'product_id' => $id, 'quantity' => $cantidad, 'subtotal' => $subtotal );
+            
+            $existe_pedido = $this->Sale->find( 'all', array('fields' => array('Sale.product_id'), 'conditions' => array('Sale.product_id' => $id)));
+            
+            if(count($existe_pedido) == 0)
+            {
+                $this->Sale->save($sale);
+            }
+        
+        }
+        
+        $this->autoRender = false;
 	}
 
 /**
@@ -86,6 +110,105 @@ class SalesController extends AppController {
 		$products = $this->Sale->Product->find('list');
 		$this->set(compact('products'));
 	}
+	
+	public function itemupdate()
+    {
+        if($this->request->is('ajax'))
+        {
+            $id = $this->request->data['id'];
+            
+            $cantidad = isset($this->request->data['cantidad']) ? $this->request->data['cantidad'] : null;
+            
+            if($cantidad == 0)
+            {
+                $cantidad = 1;
+            }
+            
+            $item = $this->Sale->find('all', array('fields' => array('Sale.id', 'Product.price'), 'conditions' => array('Sale.id' => $id)));
+            
+            $precio_item = $item[0]['Product']['price'];
+            
+            $subtotal_item = $cantidad * $precio_item;
+            
+            $item_update = array('id' => $id, 'quantity' => $cantidad, 'subtotal' => $subtotal_item);
+            
+            $this->Sale->saveAll($item_update);
+        }
+        
+        $total = $this->Sale->find('all', array('fields' => array('SUM(Sale.subtotal) as subtotal')));
+        $mostrar_total = $total[0][0]['subtotal'];
+        
+        $pedido_update = $this->Sale->find('all', array('fields' => array('Sale.id', 'Sale.subtotal'), 'conditions' => array('Sale.id' => $id)));
+        
+        $mostrar_pedido = array('id' => $pedido_update[0]['Sale']['id'], 'subtotal' => $pedido_update[0]['Sale']['subtotal'], 'total' => $mostrar_total);
+        
+        echo json_encode(compact('mostrar_pedido'));
+        $this->autoRender = false;
+    }
+    
+    public function remove()
+    {
+        if($this->request->is('ajax'))
+        {
+            $id = $this->request->data['id'];
+            $this->Sale->delete($id);
+        }
+        
+        $total_remove = $this->Sale->find('all', array('fields' => array('SUM(Sale.subtotal) as subtotal')));
+        $mostrar_total_remove = $total_remove[0][0]['subtotal'];
+        
+        $pedidos = $this->Sale->find('all');
+        
+        if(count($mostrar_total_remove) == 0)
+        {
+            $mostrar_total_remove = "0";
+        }
+        
+        echo json_encode(compact('pedidos', 'mostrar_total_remove'));
+        $this->autoRender = false;
+    }
+    
+    public function recalcular()
+    {
+        // debug($_POST);
+        
+        $arreglo = $this->request->data['Sale'];
+        
+        // debug($arreglo);
+        
+        if($this->request->is('post'))
+        {
+            foreach($arreglo as $key => $value)
+            {
+                $entero = preg_replace("/[^0-9]/", "", $value);
+                
+                if($entero == 0 || $entero == "")
+                {
+                    $entero = 1;
+                }
+                
+                $precio_update = $this->Sale->find('all', array('fields' => array('Sale.id', 'Product.price'), 'conditions' => array('Sale.id' => $key)));
+                
+                $precio_update_mostrar = $precio_update[0]['Product']['price'];
+                
+                $subtotal_update = $entero * $precio_update_mostrar;
+                
+                $pedido_update = array('id' => $key, 'quantity' => $entero, 'subtotal' => $subtotal_update);
+                $this->Sale->saveAll($pedido_update);
+            }
+        }
+        
+        if($this->request->data['recalcular'] == 'recalcular')
+        {
+            $this->Flash->success('Todos los pedidos fueron actualizados correctamente');
+                    
+            return $this->redirect(array('controller' => 'sales', 'action' => 'view'));            
+        }
+        elseif($this->request->data['procesar'] == 'procesar')
+        {
+             return $this->redirect(array('controller' => 'ordens', 'action' => 'add'));  
+        }
+    }
 
 /**
  * delete method

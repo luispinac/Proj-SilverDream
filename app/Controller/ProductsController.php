@@ -24,7 +24,13 @@ class ProductsController extends AppController {
  */
 	public function index() {
 		$this->Product->recursive = 0;
-		$this->Paginator->settings = array('limit' => 3);
+		$this->Paginator->settings = array('limit' => 12);
+		$this->set('products', $this->Paginator->paginate());
+	}
+	
+	public function index2() {
+		$this->Product->recursive = 0;
+		$this->Paginator->settings = array('limit' => 12);
 		$this->set('products', $this->Paginator->paginate());
 	}
 
@@ -42,6 +48,7 @@ class ProductsController extends AppController {
 		$options = array('conditions' => array('Product.' . $this->Product->primaryKey => $id));
 		$this->set('product', $this->Product->find('first', $options));
 	}
+	
 
 /**
  * add method

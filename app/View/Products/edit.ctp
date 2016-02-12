@@ -11,7 +11,7 @@
 					echo $this->Form->input('price', array('class' => 'form-control', 'label' => 'Precio'));
 					echo $this->Form->input('stock', array('class' => 'form-control', 'label' => 'Stock'));
 					echo $this->Form->input('critical_stock', array('class' => 'form-control', 'label' => 'Stock crítico'));
-					echo $this->Form->input('type', array('class' => 'form-control', 'label' => 'Tipo'));
+					echo $this->Form->input('product_type', array('class' => 'form-control', 'label' => 'Tipo', 'type' => 'select', 'options' => array('unico' => 'Único', 'recurrente' => 'Recurrente')));
 					echo $this->Form->input('photo', array('type' => 'file', 'label' => 'Foto', 'id' => 'foto', 'class' => 'file', 'data-show-upload' => 'false', 'data-show-caption' => 'true' ));
 					echo $this->Form->input('photo_dir', array('type' => 'hidden'));
 					echo $this->Form->input('category_id', array('class' => 'form-control', 'label' => 'Categoría'));

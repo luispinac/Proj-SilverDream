@@ -15,7 +15,20 @@ class CategoriesController extends AppController {
  *
  * @var array
  */
-	public $components = array('Paginator', 'Flash', 'Session');
+	public $components = array('Flash', 'Session', 'RequestHandler');
+	public $helpers = array('Html', 'Form', 'Time', 'Js');
+	
+	public $paginate = array(
+        'Category' => array(
+        	'limit' => 2,
+        	'order' => array('Category.id' => 'asc')
+    	),
+        'Product' => array(
+        	'limit' => 8,
+        	'recursive' => 0,
+        	'order' => array('Product.id' => 'asc')
+        )
+    );
 
 /**
  * index method
@@ -38,8 +51,26 @@ class CategoriesController extends AppController {
 		if (!$this->Category->exists($id)) {
 			throw new NotFoundException(__('Categoría Inválida'));
 		}
-		$options = array('conditions' => array('Category.' . $this->Category->primaryKey => $id));
-		$this->set('category', $this->Category->find('first', $options));
+		$options = array('conditions' => array('Category.id' => $id));
+	//	$this->set('category', $this->Category->find('first', $options));
+		
+		
+	
+
+		$catList = $this->Category->find('first', $options);
+
+		$categoryId = $catList['Category']['id'];
+
+	//	$this->paginate['Product']['limit'] = 4;
+		$this->paginate['Product']['conditions'] = array('Product.category_id' => $categoryId);
+		$this->paginate['Product']['fields'] = array('Product.id', 'Product.code', 'Product.price', 'Product.photo', 'Product.photo_dir', 'Product.category_id');
+
+		// Categoría Platillo
+		$productCat = $catList['Category']['category_name'];
+
+		$this->set('products', $this->paginate('Product'));
+		$this->set('nombreCategoria', $productCat);
+	//	$this->set('idcat', $productId);
 	}
 
 /**
