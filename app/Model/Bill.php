@@ -1,17 +1,18 @@
 <?php
 App::uses('AppModel', 'Model');
 /**
- * Seller Model
+ * Bill Model
  *
+ * @property Seller $Seller
  */
-class Seller extends AppModel {
+class Bill extends AppModel {
 
 /**
  * Display field
  *
  * @var string
  */
-	public $displayField = 'first_name';
+	public $displayField = 'bill_number';
 
 /**
  * Validation rules
@@ -19,30 +20,30 @@ class Seller extends AppModel {
  * @var array
  */
 	public $validate = array(
-		'rut' => array(
-			'notBlank' => array(
-				'rule' => array('notBlank'),
-				'message' => 'Este campo no debe estar vacío',
+		'total' => array(
+			'numeric' => array(
+				'rule' => array('numeric'),
+				//'message' => 'Your custom message here',
 				//'allowEmpty' => false,
 				//'required' => false,
 				//'last' => false, // Stop validation after this rule
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 		),
-		'first_name' => array(
-			'notBlank' => array(
-				'rule' => array('notBlank'),
-				'message' => 'Este campo no debe estar vacío',
+		'bill_number' => array(
+			'numeric' => array(
+				'rule' => array('numeric'),
+				//'message' => 'Your custom message here',
 				//'allowEmpty' => false,
 				//'required' => false,
 				//'last' => false, // Stop validation after this rule
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 		),
-		'last_name' => array(
+		'payment_method' => array(
 			'notBlank' => array(
 				'rule' => array('notBlank'),
-				'message' => 'Este campo no debe estar vacío',
+				//'message' => 'Your custom message here',
 				//'allowEmpty' => false,
 				//'required' => false,
 				//'last' => false, // Stop validation after this rule
@@ -50,12 +51,29 @@ class Seller extends AppModel {
 			),
 		),
 	);
+
+	// The Associations below have been created with all possible keys, those that are not needed can be removed
+
+/**
+ * belongsTo associations
+ *
+ * @var array
+ */
+	public $belongsTo = array(
+		'Seller' => array(
+			'className' => 'Seller',
+			'foreignKey' => 'seller_id',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
+		)
+	);
 	
 	public $hasMany = array(
-		'Bill' => array(
-			'className' => 'Bill',
-			'foreignKey' => 'seller_id',
-			'dependent' => false,
+		'BillItem' => array(
+			'className' => 'BillItem',
+			'foreignKey' => 'bill_id',
+			'dependent' => true,
 			'conditions' => '',
 			'fields' => '',
 			'order' => '',
@@ -65,5 +83,5 @@ class Seller extends AppModel {
 			'finderQuery' => '',
 			'counterQuery' => ''
 		)
-	);
+	);	
 }

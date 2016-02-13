@@ -33,6 +33,25 @@ class ProductsController extends AppController {
 		$this->Paginator->settings = array('limit' => 12);
 		$this->set('products', $this->Paginator->paginate());
 	}
+	
+	public function searchjson()
+	{
+		$term = null;
+		if(!empty($this->request->query['term']))
+		{
+			$term = $this->request->query['term'];
+			$terms = explode(' ', trim($term));
+			$terms = array_diff($terms, array(''));
+			foreach($terms as $term)
+			{
+				$conditions[] = array('Product.code LIKE' => '%' . $term . '%');
+			}
+			
+			$products = $this->Product->find('all', array('recursive' => -1, 'fields' => array('Product.id', 'Product.code', 'Product.photo', 'Product.photo_dir'), 'conditions' => $conditions, 'limit' => 20));
+		}
+		echo json_encode($products);
+		$this->autoRender = false;
+	}
 
 /**
  * view method
@@ -129,15 +148,15 @@ class ProductsController extends AppController {
 			foreach($terms as $term)
 			{
 				$terms1[] = preg_replace('/[^a-zA-ZñÑáéíóúÁÉÍÓÚ0-9 ]/', '', $term);
-				$conditions[] = array('Platillo.nombre LIKE' => '%' . $term . '%');
+				$conditions[] = array('Product.code LIKE' => '%' . $term . '%');
 			}
-			$platillos = $this->Platillo->find('all', array('recursive' => -1, 'conditions' => $conditions, 'limit' => 200));
-			if(count($platillos) == 1)
+			$products = $this->Product->find('all', array('recursive' => -1, 'conditions' => $conditions, 'limit' => 200));
+			if(count($products) == 1)
 			{
-				return $this->redirect(array('controller' => 'platillos', 'action' => 'view', $platillos[0]['Platillo']['id']));
+				return $this->redirect(array('controller' => 'products', 'action' => 'view', $products[0]['Product']['id']));
 			}
 			$terms1 = array_diff($terms1, array(''));
-			$this->set(compact('platillos', 'terms1'));
+			$this->set(compact('products', 'terms1'));
 		}
 		$this->set(compact('search'));
 		

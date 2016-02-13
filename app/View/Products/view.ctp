@@ -1,5 +1,3 @@
-<?php echo $this->Html->script( array('addtocart.js'), array('inline' => false) ); ?>	
-	
 	<h1>Código: <?php echo $product['Product']['code']; ?></h1>
 
 <div class="row">

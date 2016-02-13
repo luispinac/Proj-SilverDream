@@ -20,7 +20,7 @@ class CategoriesController extends AppController {
 	
 	public $paginate = array(
         'Category' => array(
-        	'limit' => 2,
+        	'limit' => 10,
         	'order' => array('Category.id' => 'asc')
     	),
         'Product' => array(
@@ -37,7 +37,7 @@ class CategoriesController extends AppController {
  */
 	public function index() {
 		$this->Category->recursive = 0;
-		$this->set('categories', $this->Paginator->paginate());
+		$this->set('categories', $this->paginate());
 	}
 
 /**

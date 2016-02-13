@@ -6,7 +6,7 @@
 
 <?php echo $this->Form->create(NULL, array('url' => array('controller' => 'sales', 'action' => 'recalcular'))); ?>
 
-<h1>Pedidos</h1>
+<h1>Items en esta venta</h1>
 
 <hr>
 <div class="row">
@@ -64,7 +64,7 @@
 	<div class="col col-sm-12">
 		<div class="pull-right tr">
 
-		<?php echo $this->Html->link('Quitar pedidos', array('controller' => 'sales', 'action' => 'quitar'), array('class' => 'btn btn-danger', 'confirm' => 'Está seguro de quitar todos los pedidos?')); ?>
+		<?php echo $this->Html->link('Vaciar venta', array('controller' => 'sales', 'action' => 'quitar'), array('class' => 'btn btn-danger', 'confirm' => 'Está seguro de quitar todos items de esta venta?')); ?>
 		
 		&nbsp;&nbsp;
 
@@ -78,7 +78,7 @@
 
 		<br><br>
 		
-		<?php echo $this->Form->button('<i class="glyphicon glyphicon-arrow-right"></i> Procesar Orden', array('class' => 'btn btn-primary', 'escape' =>false, 'name' => 'procesar', 'value' => 'procesar')); ?>
+		<?php echo $this->Form->button('<i class="glyphicon glyphicon-arrow-right"></i> Procesar Venta', array('class' => 'btn btn-primary', 'escape' =>false, 'name' => 'procesar', 'value' => 'procesar')); ?>
 
 		<?php echo $this->Form->end(); ?>
 

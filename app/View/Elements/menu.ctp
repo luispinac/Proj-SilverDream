@@ -1,3 +1,4 @@
+<?php //echo $this->Html->script( array('addtocart.js'), array('inline' => false) ); ?>	
 <!-- Fixed navbar -->
     <div class="navbar navbar-default navbar-fixed-top" role="navigation">
       <div class="container">
@@ -24,19 +25,15 @@
                 <li class="divider"></li>
                 <li class="dropdown-header">Vendedores</li>
                 <li><?php echo $this->Html->link('Lista Vendedores', array('controller' => 'sellers', 'action' => 'index')) ?></li>
-                <li><?php echo $this->Html->link('Nuevo Vendedor', array('controller' => 'sellers', 'action' => 'add')) ?></li>                   
+                <li><?php echo $this->Html->link('Nuevo Vendedor', array('controller' => 'sellers', 'action' => 'add')) ?></li>           
+                 <li class="divider"></li>
+                <li class="dropdown-header">Cliente</li>
+                <li><?php echo $this->Html->link('Lista Clientes', array('controller' => 'clients', 'action' => 'index')) ?></li>
+                <li><?php echo $this->Html->link('Nuevo Cliente', array('controller' => 'clients', 'action' => 'add')) ?></li>
 
               </ul>
             </li>
             <?php //endif; ?>
-
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Clientes <span class="caret"></span></a>
-              <ul class="dropdown-menu" role="menu">
-                <li><?php echo $this->Html->link('Lista Clientes', array('controller' => 'clients', 'action' => 'index')) ?></li>
-                <li><?php echo $this->Html->link('Nuevo Cliente', array('controller' => 'clients', 'action' => 'add')) ?></li>
-              </ul>
-            </li>
 
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">Productos <span class="caret"></span></a>
@@ -53,16 +50,17 @@
             </li>
             
             <?php //if($current_user['role'] == 'admin'): ?>
-            <li><?php echo $this->Html->link('Lista de Órdenes', array('controller' => 'ordens', 'action' => 'index')); ?></li>
+            <li><?php echo $this->Html->link('Lista de ventas', array('controller' => 'bills', 'action' => 'index')); ?></li>
             <?php //endif; ?>
           </ul>
           
-          <?php echo $this->Form->create('Platillo', array('type' => 'GET', 'class' => 'navbar-form navbar-left', 'url' => array('controller' => 'platillos', 'action' => 'search'))); ?>
+          <?php echo $this->Form->create('Product', array('type' => 'GET', 'class' => 'navbar-form navbar-left', 'url' => array('controller' => 'products', 'action' => 'search'))); ?>
           <div class="form-group">
-              <?php echo $this->Form->input('search', array('label' => false, 'div' => false, 'id' => 's', 'class' => 'form-control s', 'autocomplete' => 'off', 'placeholder' => 'Buscar producto...')); ?>
+              <?php echo $this->Form->input('search', array('label' => false, 'div' => false, 'id' => 's', 'class' => 'form-control s', 'autocomplete' => 'off', 'placeholder' => 'Buscar productos...')); ?>
           </div>
-          <?php echo $this->Form->button('Buscar', array('div' => false, 'class' => 'btn btn-primary')); ?>
+          <?php echo $this->Form->button('Buscar', array('div' => false, 'class' => 'btn btn-default')); ?>
           <?php echo $this->Form->end(); ?>
+          <?php echo $this->Form->button('Agregar a la venta', array('div' => false, 'class' => 'btn btn-primary addtocart2')); ?>
           
           <?php echo $this->Html->link('Venta', array('controller' => 'sales', 'action' => 'view'), array('class' => 'btn btn-success navbar-btn') ); ?>
           

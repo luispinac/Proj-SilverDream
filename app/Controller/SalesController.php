@@ -40,7 +40,7 @@ class SalesController extends AppController {
         
         if(count($res_pedidos) == 0)
         {
-            $this->Session->setFlash('Aún no se realizaron pedidos', 'default', array('class' => 'alert alert-warning'));
+            $this->Flash->error('Aún no se han agregado items a esta venta');
             return $this->redirect(array('controller' => 'products', 'action' => 'index'));
         }
         
@@ -84,6 +84,56 @@ class SalesController extends AppController {
         
         $this->autoRender = false;
 	}
+	
+	public function add2 () {
+		   
+		if($this->request->is('ajax'))
+        {
+            //$code = '';
+            $code2 = $this->request->data['code'];
+            $code = strval($code2);        
+            //console.log($code);
+           
+            $cantidad = $this->request->data['cantidad'];
+            
+            $product = $this->Sale->Product->find('all', array('fields' => array('Product.price', 'Product.id'), 'conditions' => array('Product.code' => $code)));
+            
+            if(count($product) > 0)
+            {
+                $precio = $product[0]['Product']['price'];
+                $id = $product[0]['Product']['id'];
+                
+                $subtotal = $cantidad * $precio;
+                
+                $sale = array( 'product_id' => $id, 'quantity' => $cantidad, 'subtotal' => $subtotal );
+                
+                $existe_pedido = $this->Sale->find( 'all', array('fields' => array('Sale.product_id'), 'conditions' => array('Sale.product_id' => $id)));
+                
+                if(count($existe_pedido) == 0)
+                {
+                    $this->Sale->save($sale);
+                }
+            }
+        
+        }
+        
+        $this->autoRender = false;
+	}
+	
+	public function quitar()
+    {
+        if($this->Sale->deleteAll(1, false))
+        {
+            $this->Flash->success('Todos los items han sido quitados de la venta');
+        }
+        else
+        {
+            $this->Flash->error('No se pudo quitar los items de la venta');
+        }
+        
+        return $this->redirect(array('controller' => 'products', 'action' => 'index'));
+    }
+	
 
 /**
  * edit method
@@ -206,7 +256,7 @@ class SalesController extends AppController {
         }
         elseif($this->request->data['procesar'] == 'procesar')
         {
-             return $this->redirect(array('controller' => 'ordens', 'action' => 'add'));  
+             return $this->redirect(array('controller' => 'bills', 'action' => 'add'));  
         }
     }
 

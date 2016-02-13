@@ -6,7 +6,7 @@ $(document).ready(function(){
         },
         source: function(request, response) {
             $.ajax({
-                url: basePath + "platillos/searchjson",
+                url: basePath + "products/searchjson",
                 data: {
                     term: request.term
                 },
@@ -14,10 +14,10 @@ $(document).ready(function(){
                 success: function(data){
                     response($.map(data, function(el, index){
                         return {
-                            value: el.Platillo.nombre,
-                            nombre: el.Platillo.nombre,
-                            foto: el.Platillo.foto,
-                            foto_dir: el.Platillo.foto_dir
+                            value: el.Product.code,
+                            code: el.Product.code,
+                            photo: el.Product.photo,
+                            photo_dir: el.Product.photo_dir
                         };
                     }));
                 }
@@ -26,7 +26,7 @@ $(document).ready(function(){
     }).data("ui-autocomplete")._renderItem = function(ul, item){
         return $("<li></li>")
         .data("item.autocomplete", item)
-        .append("<a><img width='40' src='" + basePath + "files/platillo/foto/" + item.foto_dir + "/" + item.foto + "' />" + item.nombre +  "</a>")
+        .append("<a><img width='40' src='" + basePath + "files/product/photo/" + item.photo_dir + "/" + item.photo + "' />" + item.code +  "</a>")
         .appendTo(ul)
     };
 });
