@@ -44,9 +44,9 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 	</script>
 </head>
 <body>
-	<?php //if(isset($current_user)): ?>
+	<?php if(isset($current_user)): ?>
 	<?php echo $this->element('menu'); ?>
-	<?php //endif; ?>
+	<?php endif; ?>
 
     <div class="container" role="main">
 

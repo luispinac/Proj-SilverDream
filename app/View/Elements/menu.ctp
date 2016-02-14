@@ -61,8 +61,7 @@
           <?php echo $this->Form->button('Buscar', array('div' => false, 'class' => 'btn btn-default')); ?>
           <?php echo $this->Form->end(); ?>
           <?php echo $this->Form->button('Agregar a la venta', array('div' => false, 'class' => 'btn btn-primary addtocart2')); ?>
-          
-          <?php echo $this->Html->link('Venta', array('controller' => 'sales', 'action' => 'view'), array('class' => 'btn btn-success navbar-btn') ); ?>
+          <?php echo $this->Html->link('Venta', array('controller' => 'sales', 'action' => 'view'), array('class' => 'btn btn-success navbar-btn glyphicon glyphicon-shopping-cart') ); ?>
           
             <ul class="nav navbar-nav navbar-right">
               <li>

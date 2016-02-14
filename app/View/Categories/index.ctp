@@ -22,7 +22,7 @@
 		<td class="actions">
 			<?php echo $this->Html->link(__('Ver'), array('action' => 'view', $category['Category']['id'])); ?>
 			<?php echo $this->Html->link(__('Editar'), array('action' => 'edit', $category['Category']['id'])); ?>
-			<?php echo $this->Form->postLink(__('Eliminar'), array('action' => 'delete', $category['Category']['id']), array('confirm' => __('Are you sure you want to delete # %s?', $category['Category']['id']))); ?>
+			<?php echo $this->Form->postLink(__('Eliminar'), array('action' => 'delete', $category['Category']['id']), array('confirm' => __('Está seguro que desea eliminar la categoría %s?', $category['Category']['category_name']))); ?>
 		</td>
 	</tr>
 <?php endforeach; ?>

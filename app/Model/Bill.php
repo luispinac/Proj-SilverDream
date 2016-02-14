@@ -60,9 +60,9 @@ class Bill extends AppModel {
  * @var array
  */
 	public $belongsTo = array(
-		'Seller' => array(
-			'className' => 'Seller',
-			'foreignKey' => 'seller_id',
+		'User' => array(
+			'className' => 'User',
+			'foreignKey' => 'user_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''

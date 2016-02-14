@@ -34,7 +34,7 @@
 		<td class="actions">
 			<?php echo $this->Html->link(__('Ver'), array('action' => 'view', $client['Client']['id'])); ?>
 			<?php echo $this->Html->link(__('Editar'), array('action' => 'edit', $client['Client']['id'])); ?>
-			<?php echo $this->Form->postLink(__('Eliminar'), array('action' => 'delete', $client['Client']['id']), array('confirm' => __('Are you sure you want to delete # %s?', $client['Client']['id']))); ?>
+			<?php echo $this->Form->postLink(__('Eliminar'), array('action' => 'delete', $client['Client']['id']), array('confirm' => __('Está seguro que quiere eliminar al cliente %s?', $client['Client']['first_name'] . " " . $client['Client']['last_name'] ))); ?>
 		</td>
 	</tr>
 <?php endforeach; ?>

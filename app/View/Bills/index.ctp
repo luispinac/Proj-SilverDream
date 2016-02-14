@@ -46,7 +46,7 @@
         <?php foreach($bills as $bill): ?>
 		
 		<tr>
-			<td><?php echo h($bill['Seller']['first_name']); ?></td>
+			<td><?php echo h($bill['User']['fullname']); ?></td>
 			<td><?php echo h($bill['Bill']['bill_number']); ?></td>
 			<td><?php echo h($bill['Bill']['payment_method']); ?></td>
 			<td><?php echo h($bill['Bill']['total']); ?></td>

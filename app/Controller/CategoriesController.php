@@ -35,6 +35,27 @@ class CategoriesController extends AppController {
  *
  * @return void
  */
+ 	public function isAuthorized($user)
+	{
+		if($user['role'] == 'seller')
+		{
+			if(in_array($this->action, array('index', 'view')))
+			{
+				return true;
+			}
+			else
+			{
+				if($this->Auth->user('id'))
+				{
+					$this->Flash->error('Usuario no puede acceder a esta sección', array('class' => 'alert alert-danger'));
+					$this->redirect($this->Auth->redirect());
+				}
+			}
+		}
+		
+		return parent::isAuthorized($user);
+	}
+ 
 	public function index() {
 		$this->Category->recursive = 0;
 		$this->set('categories', $this->paginate());

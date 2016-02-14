@@ -23,9 +23,12 @@ class ProductsController extends AppController {
  * @return void
  */
 	public function index() {
+		//$usuario = $this->Session->read('Auth.User.username');
+		$usuario = $this->Auth->user('fullname');
 		$this->Product->recursive = 0;
 		$this->Paginator->settings = array('limit' => 12);
 		$this->set('products', $this->Paginator->paginate());
+		$this->set('usuario', $usuario);
 	}
 	
 	public function index2() {
@@ -169,5 +172,26 @@ class ProductsController extends AppController {
 		{
 			$this->set('ajax', 0);
 		}
+	}
+	
+	public function isAuthorized($user)
+	{
+		if($user['role'] == 'seller')
+		{
+			if(in_array($this->action, array('add', 'add2', 'index', 'index2', 'view', 'searchjson', 'search')))
+			{
+				return true;
+			}
+			else
+			{
+				if($this->Auth->user('id'))
+				{
+					$this->Flash->error('No puede acceder', array('class' => 'alert alert-danger'));
+					$this->redirect($this->Auth->redirect());
+				}
+			}
+		}
+		
+		return parent::isAuthorized($user);
 	}
 }

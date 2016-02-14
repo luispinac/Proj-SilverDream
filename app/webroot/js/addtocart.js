@@ -28,9 +28,13 @@ $(document).ready(function(){
                 // code: '100213',
                 cantidad: 1
             },
-            dataType: "html",
+            dataType: "json",
             success: function(data) {
-                $('#msg').html('<div class="alert alert-success flash-msg">Producto agregado a la venta.</div>');
+                if(data.cant_productos_encontrados == 0){
+                $('#msg').html('<div class="alert alert-danger flash-msg">Producto no encontrado.</div>');
+                }else{
+                    $('#msg').html('<div class="alert alert-success flash-msg">Producto agregado a la venta.</div>');
+                }
                 $('.flash-msg').delay(2000).fadeOut('slow');
             },
             error: function(){

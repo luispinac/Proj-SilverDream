@@ -7,7 +7,7 @@
                 <?php
                 	echo $this->Form->input('bill_number', array('class' => 'form-control', 'label' => 'Número de boleta'));
                 	echo $this->Form->input('payment_method', array('class' => 'form-control', 'label' => 'Método de pago', 'type' => 'select', 'options' => array('Efectivo' => 'Efectivo', 'Transbank' => 'Transbank')));
-                    echo $this->Form->input('seller_id', array('class' => 'form-control', 'label' => 'Vendedor'));
+                    //echo $this->Form->input('user_id', array('class' => 'form-control', 'label' => 'Vendedor'));
                 ?>
 			</fieldset>
 			<h3>Productos: </h3>

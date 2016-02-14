@@ -1,5 +1,6 @@
 <?php
 App::uses('AppController', 'Controller');
+//AuthComponent::user('id');
 /**
  * Users Controller
  *
@@ -16,6 +17,7 @@ class UsersController extends AppController {
  * @var array
  */
 	public $components = array('Paginator', 'Flash', 'Session');
+	public $helpers = array('Auth');
 
 /**
  * index method
@@ -25,6 +27,31 @@ class UsersController extends AppController {
 	public function index() {
 		$this->User->recursive = 0;
 		$this->set('users', $this->Paginator->paginate());
+	}
+	
+	public function login()
+	{
+		if($this->request->is('post'))
+		{
+			if($this->Auth->login())
+			{
+				return $this->redirect($this->Auth->redirectUrl());
+			}
+			$this->Flash->error('Usuario y/o contraseña son incorrectos!');
+		}
+	}
+	
+	public function logout()
+	{
+		return $this->redirect($this->Auth->logout());
+	}
+	
+	public function beforeFilter()
+	{
+		parent::beforeFilter();
+		
+		//$this->Auth->allow('add');
+		
 	}
 
 /**
@@ -48,8 +75,15 @@ class UsersController extends AppController {
  * @return void
  */
 	public function add() {
+		//$usuario = $this->Session->read('Auth.User.username');
+		$usuario = $this->Auth->user('fullname');
 		if ($this->request->is('post')) {
+			//$usuario = $this->Auth->user('id');
+			//$userdata = $this->session->read('Auth.User');
+			
 			$this->User->create();
+			$this->request->data['User']['enable'] = 1;
+			$this->request->data['User']['role'] = $usuario;
 			if ($this->User->save($this->request->data)) {
 				$this->Flash->success(__('El usuario ha sido registrado.'));
 				return $this->redirect(array('action' => 'index'));
@@ -57,6 +91,7 @@ class UsersController extends AppController {
 				$this->Flash->error(__('El usuario no pudo ser registrado.'));
 			}
 		}
+		$this->set('usuario', $usuario);
 	}
 
 /**

@@ -50,20 +50,5 @@ class Seller extends AppModel {
 			),
 		),
 	);
-	
-	public $hasMany = array(
-		'Bill' => array(
-			'className' => 'Bill',
-			'foreignKey' => 'seller_id',
-			'dependent' => false,
-			'conditions' => '',
-			'fields' => '',
-			'order' => '',
-			'limit' => '',
-			'offset' => '',
-			'exclusive' => '',
-			'finderQuery' => '',
-			'counterQuery' => ''
-		)
-	);
+
 }

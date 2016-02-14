@@ -15,8 +15,12 @@
 	</div>
 
 	<div class="page-header">
-		<h2><?php echo __('Productos'); ?></h2>
+		<div class="row">
+	  		<div class="col-sm-8"><h2><?php echo __('Productos'); ?></h2></div>
+	  		<div class="col-sm-4 text-right">Hola <?php echo $usuario; ?></div>
+		</div>
 	</div>
+	 
 
 	<div class="row">
 		<?php foreach ($products as $product): ?>
@@ -27,7 +31,7 @@
 			<br />
 			<?php echo $this->Html->link($product['Product']['code'], array('action' => 'view', $product['Product']['id'])); ?>
 			<br />
-			<span class="glyphicon glyphicon-cutlery" aria-hidden="true"></span>
+			<span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"></span>
 			<?php echo $this->Html->link($product['Category']['category_name'], array('controller' => 'categories', 'action' => 'view', $product['Category']['id']), array('class' => 'food-category')); ?>
 			<br />
 			$ <?php echo h($product['Product']['price']); ?>&nbsp;

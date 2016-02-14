@@ -22,6 +22,27 @@ class BillsController extends AppController {
  *
  * @return void
  */
+ 	public function isAuthorized($user)
+	{
+		if($user['role'] == 'seller')
+		{
+			if(in_array($this->action, array('view', 'add')))
+			{
+				return true;
+			}
+			else
+			{
+				if($this->Auth->user('id'))
+				{
+					$this->Flash->error('Usuario no puede acceder a esta sección', array('class' => 'alert alert-danger'));
+					$this->redirect($this->Auth->redirect());
+				}
+			}
+		}
+		
+		return parent::isAuthorized($user);
+	}
+ 
 	public function index() {
 		$this->Bill->recursive = 0;
 		$this->set('bills', $this->Paginator->paginate());
@@ -61,9 +82,9 @@ class BillsController extends AppController {
             $mostrar_total_pedidos = $total_pedidos[0][0]['subtotal'];
             
             // Recuperando mesas del restaurante
-            $sellers = $this->Bill->Seller->find('list');
+            $users = $this->Bill->User->find('list');
             
-            $this->set(compact('orden_item', 'mostrar_total_pedidos', 'sellers'));
+            $this->set(compact('orden_item', 'mostrar_total_pedidos', 'users'));
         }
         else
         {
@@ -74,6 +95,7 @@ class BillsController extends AppController {
         if($this->request->is('post'))
         {
             $this->Bill->create();
+            $this->request->data['Bill']['user_id'] = $this->Auth->user('id');
             if($this->Bill->save($this->request->data))
             {
                 $id_orden = $this->Bill->id;
