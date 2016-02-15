@@ -18,6 +18,8 @@ class BillItem extends AppModel {
 			'order' => ''
 		),
 	);    
+	
+	public $actsAs = array('Containable');
     
 }
 

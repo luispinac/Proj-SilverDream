@@ -11,6 +11,7 @@
 					echo $this->Form->input('username', array('class' => 'form-control', 'label' => 'Username'));
 					echo $this->Form->input('password', array('class' => 'form-control', 'label' => 'Contraseña'));
 					echo $this->Form->input('role', array('class' => 'form-control', 'label' => 'Rol', 'type' => 'select', 'options' => array('admin' => 'Administrador', 'seller' => 'Vendedor')));
+					
 
 				?>
 				</fieldset>

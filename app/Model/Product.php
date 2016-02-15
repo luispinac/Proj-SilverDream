@@ -16,20 +16,22 @@ class Product extends AppModel {
 	public $displayField = 'name';
 	
 	public $actsAs = array(
-			'Upload.Upload' => array(
-				'photo' => array(
-					'fields' => array(
-						'dir' => 'photo_dir'
-					),
-					'thumbnailMethod' => 'php',
-					'thumbnailSizes' => array(
-						'vga' => '640x480',
-						'thumb' => '150x150'
-					),
-					'deleteOnUpdate' => true,
-					'deleteFolderOnDelete' => true
+		'Upload.Upload' => array(
+			'photo' => array(
+				'fields' => array(
+					'dir' => 'photo_dir'
+				),
+				'thumbnailMethod' => 'php',
+				'thumbnailSizes' => array(
+					'vga' => '640x480',
+					'thumb' => '150x150'
+				),
+				'deleteOnUpdate' => true,
+				'deleteFolderOnDelete' => true
 			)
-		)
+		),
+		'Containable'
+		
 	);
 
 /**

@@ -27,6 +27,8 @@ class BillItemsController extends AppController {
         $this->set('billitems', $this->paginate());
     }
     
+    
+    
 }
 
 ?>

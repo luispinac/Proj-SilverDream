@@ -1,5 +1,6 @@
 <?php
 App::uses('AppController', 'Controller');
+//Configure::write('debug', 0); // ****** DESCOMENTAR!!!!
 /**
  * Products Controller
  *
@@ -16,6 +17,7 @@ class ProductsController extends AppController {
  * @var array
  */
 	public $components = array('Paginator', 'Flash', 'Session');
+	var $helpers = array('Html', 'Form','Csv');
 
 /**
  * index method
@@ -194,4 +196,104 @@ class ProductsController extends AppController {
 		
 		return parent::isAuthorized($user);
 	}
+	
+	public function export()
+	{
+	    if ($this->request->is('get')) {
+		    $start_date = $this->params['url']['start'];
+		    $end_date = $this->params['url']['end'];
+	    }else{
+	    	$start_date = date('Y-m-01'); 
+	    	$end_date = date('Y-m-31');
+	    }
+	    $this->Paginator->settings  = array(
+		    'joins' => array(
+		        array(
+		            'table' => 'bill_items',
+		            'alias' => 'BillItem',
+		            'type' => 'LEFT',
+		            'conditions' => array(
+		                'BillItem.product_id = Product.id'
+		            )
+		        )
+		    ),
+		    'conditions' => array(
+		        'Product.product_type' => 'recurrente',
+		        'BillItem.quantity' => 1,
+		        'BillItem.created >= ' => $start_date,
+      			'BillItem.created <= ' => $end_date
+		    ),
+		    'fields' => array(
+		    	'Product.id', 'Product.description', 'COUNT(Product.id) as Contador'	
+		    ),
+		    'group' => 'Product.id',
+		    'order' => 'Contador ASC'
+		);
+		$this->set('products', $this->Paginator->paginate());
+		$this->layout = null;
+	    $this->autoLayout = false;
+	    Configure::write('debug','0');
+	}
+	
+	
+		
+	public function prodpocomovimiento()
+    {
+    	date_default_timezone_set('America/Santiago');
+    	if ($this->request->is('post')) {
+    		//echo "<pre>";
+    		//print_r($this->request->data);
+    		//echo "</pre>";
+    		$start_year = $this->request->data['Product']['start']['year'];
+    		$start_month = $this->request->data['Product']['start']['month'];
+    		$start_day = $this->request->data['Product']['start']['day'];
+    		$fechainicialString = $start_year . "-" . $start_month . "-" . $start_day . " 00:03";
+    		//echo $fechaString;
+    		//echo "</br>";
+	    	$start_date = date ( 'Y-m-j' , strtotime($fechainicialString));
+	    	//echo $start_date;
+	    	$end_year = $this->request->data['Product']['end']['year'];
+    		$end_month = $this->request->data['Product']['end']['month'];
+    		$end_day = $this->request->data['Product']['end']['day'];
+    		$fechafinalString = $end_year . "-" . $end_month . "-" . $end_day . " 00:03";
+	    	$end_date = date ( 'Y-m-j' , strtotime($fechafinalString));
+    	}else{
+    		$start_date = date('Y-m-01');//(new DateTime('first day of this month'))->format('jS, F Y'); //date('Y-m-d H:i:s'); // '2013-02-13'; //should be in YYYY-MM-DD format
+    	//	$start_date = date($start_date);
+    	//	echo $start_date;
+	    	$end_date = date('Y-m-31');//'2017-05-26'; //should be in YYYY-MM-DD format
+    	}
+	
+			$this->Paginator->settings  = array(
+			   // 'contain' => array('BillItem'),
+			    'joins' => array(
+			        array(
+			            'table' => 'bill_items',
+			            'alias' => 'BillItem',
+			            'type' => 'LEFT',
+			            'conditions' => array(
+			                'BillItem.product_id = Product.id'
+			            )
+			        )
+			    ),
+			    'conditions' => array(
+			        'Product.product_type' => 'recurrente',
+			        'BillItem.quantity' => 1,
+			        'BillItem.created >= ' => $start_date,
+	      			'BillItem.created <= ' => $end_date
+			    ),
+			    'fields' => array(
+			    	'Product.id', 'Product.description', 'COUNT(Product.id) as Contador'	
+			    ),
+			    'group' => 'Product.id',
+			    'order' => 'Contador ASC'
+			);
+	
+			//$productList = $this->Product->find('all', $options);
+	
+			$this->set('listaProductos', $this->Paginator->paginate());
+			$this->set('fechainicio', $start_date);
+			$this->set('fechatermino', $end_date);
+    	
+    }
 }
