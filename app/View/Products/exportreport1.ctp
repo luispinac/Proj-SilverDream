@@ -10,6 +10,6 @@ $this->CSV->addRow(array_keys($line));
    $line= array_merge($product['Product'], $product[0]);
    $this->CSV->addRow($line);
  }
- $filename='ProductosPocoMovimiento';
+ $filename='ProductosPocoMovimiento' . date("Y-m-d-H-i");
  echo  $this->CSV->render($filename);
 ?>

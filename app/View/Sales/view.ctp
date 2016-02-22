@@ -1,5 +1,5 @@
 <?php
-// debug($ventas);
+//debug($ventas);
 ?>
 
 <?php echo $this->Html->script(array('cart.js', 'jquery.animate-colors'), array('inline' => false)); ?>
@@ -22,7 +22,12 @@
 
 <?php foreach($ventas as $venta): ?>
 
+<?php	if($venta['Product']['stock']-$venta['Sale']['quantity'] < 0){ ?>
+	<div class="row alert alert-danger fila-sin-stock" id="row-<?php echo $venta['Sale']['id']; ?>">
+<?php }else{ ?>
 	<div class="row" id="row-<?php echo $venta['Sale']['id']; ?>">
+<?php } ?>
+
 	    
 		<div class="col col-sm-1">
 			<figure>

@@ -11,8 +11,7 @@
 	<tr>
 		<th><?php echo $this->Paginator->sort('id'); ?></th>
 		<th><?php echo $this->Paginator->sort('fullname', 'Nombre'); ?></th>
-		<th><?php echo $this->Paginator->sort('username', 'Username'); ?></th>
-		<th><?php echo $this->Paginator->sort('password', 'Contraseña'); ?></th>
+		<th><?php echo $this->Paginator->sort('username', 'Nombre usuario'); ?></th>
 		<th><?php echo $this->Paginator->sort('role', 'Rol'); ?></th>
 		<th><?php echo $this->Paginator->sort('created', 'Creado'); ?></th>
 		<th><?php echo $this->Paginator->sort('modified', 'Modificado'); ?></th>
@@ -25,7 +24,6 @@
 		<td><?php echo h($user['User']['id']); ?>&nbsp;</td>
 		<td><?php echo h($user['User']['fullname']); ?>&nbsp;</td>
 		<td><?php echo h($user['User']['username']); ?>&nbsp;</td>
-		<td><?php echo h($user['User']['password']); ?>&nbsp;</td>
 		<td><?php echo h($user['User']['role']); ?>&nbsp;</td>
 		<td><?php echo h($user['User']['created']); ?>&nbsp;</td>
 		<td><?php echo h($user['User']['modified']); ?>&nbsp;</td>
@@ -33,6 +31,7 @@
 			<?php echo $this->Html->link(__('Ver'), array('action' => 'view', $user['User']['id'])); ?>
 			<?php echo $this->Html->link(__('Editar'), array('action' => 'edit', $user['User']['id'])); ?>
 			<?php echo $this->Form->postLink(__('Eliminar'), array('action' => 'delete', $user['User']['id']), array('confirm' => __('Está seguro que quiere eliminar al usuario %s?', $user['User']['username']))); ?>
+			<?php echo $this->Html->link(__('Cambiar contraseña'), array('action' => 'changepass', $user['User']['id'])); ?>
 		</td>
 	</tr>
 <?php endforeach; ?>

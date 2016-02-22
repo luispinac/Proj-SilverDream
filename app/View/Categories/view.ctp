@@ -27,7 +27,13 @@
 				<?php echo $this->Html->image('../files/product/photo/' . $product['Product']['photo_dir'] . '/' . 'thumb_' .$product['Product']['photo'], array('url' => array('controller' => 'products', 'action' => 'view', $product['Product']['id']))); ?>
 			</figure>
 			<br />
-			<?php echo $this->Html->link('Código: ' . $product['Product']['code'], array('controller' => 'products', 'action' => 'view', $product['Product']['id'])); ?>
+			<?php 
+				if($product['Product']['stock']==0){
+					echo $this->Html->link($product['Product']['code'] . ' (**SIN STOCK**)', array('action' => 'view', $product['Product']['id']), array('class' => 'sin-stock')); 
+				}else{
+					echo $this->Html->link($product['Product']['code'], array('action' => 'view', $product['Product']['id']));
+				}
+			?>
 			<br />
 
 			$ <?php echo h($product['Product']['price']); ?>&nbsp;

@@ -117,6 +117,31 @@ class UsersController extends AppController {
 			$this->request->data = $this->User->find('first', $options);
 		}
 	}
+	
+	public function changepass($id = null) {
+		if (!$this->User->exists($id)) {
+			throw new NotFoundException(__('Usuario inválido'));
+		}
+		if ($this->request->is(array('post', 'put'))) {
+			$this->User->id = $id;
+			if ($this->User->saveField('password', $this->request->data['User']['password'])) {
+				$this->Flash->success(__('La contraseña ha sido modificada.'));
+				return $this->redirect(array('action' => 'index'));
+			} else {
+				$this->Flash->error(__('La contraseña no pudo ser modificada.'));
+			}
+		} else {
+			$idUsuarioActual = $this->Auth->user('id');
+			$roleUsuarioActual = $this->Auth->user('role');
+			if(($id!=$idUsuarioActual) && ($roleUsuarioActual != 'admin')){
+				$this->Flash->error(__('No puede cambiar la contraseña de otro usuario' . $current_user['role']));
+				return $this->redirect(array('controller' => 'products', 'action' => 'index'));
+			}else{
+				$options = array('conditions' => array('User.' . $this->User->primaryKey => $id));
+				$this->request->data = $this->User->find('first', $options);
+			}
+		}
+	}
 
 /**
  * delete method

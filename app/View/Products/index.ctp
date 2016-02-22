@@ -29,7 +29,14 @@
 				<?php echo $this->Html->image('../files/product/photo/' . $product['Product']['photo_dir'] . '/' . 'thumb_' .$product['Product']['photo'], array('url' => array('controller' => 'products', 'action' => 'view', $product['Product']['id']))); ?>
 			</figure>
 			<br />
-			<?php echo $this->Html->link($product['Product']['code'], array('action' => 'view', $product['Product']['id'])); ?>
+			<?php 
+			if($product['Product']['stock']==0){
+				echo $this->Html->link($product['Product']['code'] . ' (**SIN STOCK**)', array('action' => 'view', $product['Product']['id']), array('class' => 'sin-stock')); 
+			}else{
+				echo $this->Html->link($product['Product']['code'], array('action' => 'view', $product['Product']['id']));
+			}
+			
+			?>
 			<br />
 			<span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"></span>
 			<?php echo $this->Html->link($product['Category']['category_name'], array('controller' => 'categories', 'action' => 'view', $product['Category']['id']), array('class' => 'food-category')); ?>

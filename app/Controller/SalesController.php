@@ -243,11 +243,14 @@ class SalesController extends AppController {
     
     public function recalcular()
     {
-        // debug($_POST);
+         debug($_POST);
         
         $arreglo = $this->request->data['Sale'];
         
-        // debug($arreglo);
+        echo "<pre>";
+         print_r($arreglo);
+         echo "</pre>";
+        
         
         if($this->request->is('post'))
         {

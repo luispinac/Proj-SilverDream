@@ -16,6 +16,7 @@ class ClientsController extends AppController {
  * @var array
  */
 	public $components = array('Paginator', 'Flash', 'Session');
+	var $helpers = array('Html', 'Form','Csv');
 
 /**
  * index method
@@ -123,5 +124,69 @@ class ClientsController extends AppController {
 			$this->Flash->error(__('El cliente no pudo ser eliminado.'));
 		}
 		return $this->redirect(array('action' => 'index'));
+	}
+	
+	public function clientesfrecuentes()
+    {
+    	if ($this->request->is('post')) {
+    		$start_year = $this->request->data['Client']['start']['year'];
+    		$start_month = $this->request->data['Client']['start']['month'];
+    		$start_day = $this->request->data['Client']['start']['day'];
+    		$fechainicialString = $start_year . "-" . $start_month . "-" . $start_day . " 00:01";
+	    	$start_date = date ( 'Y-m-j' , strtotime($fechainicialString));
+	    	$end_year = $this->request->data['Client']['end']['year'];
+    		$end_month = $this->request->data['Client']['end']['month'];
+    		$end_day = $this->request->data['Client']['end']['day'];
+    		$fechafinalString = $end_year . "-" . $end_month . "-" . $end_day . " 23:59";
+	    	$end_date = date( 'Y-m-j' , strtotime($fechafinalString));
+	    	$end_date2 = date('Y-m-d', strtotime($end_date. ' + 1 days'));
+    	}else{
+    		$start_date = date( 'Y-m-j' , strtotime('2016-01-01-00:01'));
+	    	$end_date = date('Y-m-d');
+	    	$end_date2 = date('Y-m-d', strtotime($end_date. ' + 1 days'));
+    	}
+			$options  = array(
+			    
+			    'conditions' => array(
+			        'Client.created >= ' => $start_date,
+	      			'Client.created <= ' => $end_date2
+			    ),
+			    'fields' => array(
+			    	'Client.id', 'Client.first_name', 'Client.last_name', 'Client.email', 'Client.created'	
+			    ),
+			    'order' => 'Client.last_name ASC'
+			);
+
+			$this->set('clientes', $this->Client->find('all', $options));
+			$this->set('fechainicio', $start_date);
+			$this->set('fechatermino', $end_date);
+    }
+    
+    public function exportreport7()
+	{
+	    if ($this->request->is('get')) {
+		    $start_date = $this->params['url']['start'];
+		    $end_date = $this->params['url']['end'];
+		    $end_date2 = date('Y-m-d', strtotime($end_date. ' + 1 days'));
+	    }else{
+	    	$start_date = date( 'Y-m-j' , strtotime('2016-01-01-00:01'));
+	    	$end_date = date('Y-m-d');
+	    	$end_date2 = date('Y-m-d', strtotime($end_date. ' + 1 days'));
+	    }
+    	$options  = array(
+			    
+			    'conditions' => array(
+			        'Client.created >= ' => $start_date,
+	      			'Client.created <= ' => $end_date2
+			    ),
+			    'fields' => array(
+			    	'Client.id', 'Client.first_name', 'Client.last_name', 'Client.email', 'Client.created'	
+			    ),
+			    'order' => 'Client.last_name ASC'
+			);
+		$this->set('clientes', $this->Client->find('all', $options));
+		$this->layout = null;
+	    $this->autoLayout = false;
+	    Configure::write('debug','0');
 	}
 }

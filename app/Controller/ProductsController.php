@@ -180,7 +180,7 @@ class ProductsController extends AppController {
 	{
 		if($user['role'] == 'seller')
 		{
-			if(in_array($this->action, array('add', 'add2', 'index', 'index2', 'view', 'searchjson', 'search')))
+			if(in_array($this->action, array('index', 'index2', 'view', 'searchjson', 'search')))
 			{
 				return true;
 			}
@@ -197,37 +197,40 @@ class ProductsController extends AppController {
 		return parent::isAuthorized($user);
 	}
 	
-	public function export()
+	public function exportreport1()
 	{
 	    if ($this->request->is('get')) {
 		    $start_date = $this->params['url']['start'];
 		    $end_date = $this->params['url']['end'];
+		    $corte = $this->params['url']['corte'];
 	    }else{
 	    	$start_date = date('Y-m-01'); 
 	    	$end_date = date('Y-m-31');
+	    	$corte = 15;
 	    }
 	    $this->Paginator->settings  = array(
 		    'joins' => array(
-		        array(
-		            'table' => 'bill_items',
-		            'alias' => 'BillItem',
-		            'type' => 'LEFT',
-		            'conditions' => array(
-		                'BillItem.product_id = Product.id'
-		            )
-		        )
-		    ),
-		    'conditions' => array(
-		        'Product.product_type' => 'recurrente',
-		        'BillItem.quantity' => 1,
-		        'BillItem.created >= ' => $start_date,
-      			'BillItem.created <= ' => $end_date
-		    ),
-		    'fields' => array(
-		    	'Product.id', 'Product.description', 'COUNT(Product.id) as Contador'	
-		    ),
-		    'group' => 'Product.id',
-		    'order' => 'Contador ASC'
+			        array(
+			            'table' => 'bill_items',
+			            'alias' => 'BillItem',
+			            'type' => 'LEFT',
+			            'conditions' => array(
+			                'BillItem.product_id = Product.id'
+			            )
+			        )
+			    ),
+			    'conditions' => array(
+			        //'Product.product_type' => 'recurrente',
+			       // 'BillItem.quantity' => 1,
+			        'BillItem.created >= ' => $start_date,
+	      			'BillItem.created <= ' => $end_date
+			    ),
+			    'fields' => array(
+			    	'Product.id', 'Product.description', 'SUM(BillItem.quantity) as Cantidad'	
+			    ),
+			    'group' => 'Product.id',
+			    'order' => 'Cantidad ASC',
+			    'limit' => $corte
 		);
 		$this->set('products', $this->Paginator->paginate());
 		$this->layout = null;
@@ -239,33 +242,24 @@ class ProductsController extends AppController {
 		
 	public function prodpocomovimiento()
     {
-    	date_default_timezone_set('America/Santiago');
     	if ($this->request->is('post')) {
-    		//echo "<pre>";
-    		//print_r($this->request->data);
-    		//echo "</pre>";
     		$start_year = $this->request->data['Product']['start']['year'];
     		$start_month = $this->request->data['Product']['start']['month'];
     		$start_day = $this->request->data['Product']['start']['day'];
     		$fechainicialString = $start_year . "-" . $start_month . "-" . $start_day . " 00:03";
-    		//echo $fechaString;
-    		//echo "</br>";
 	    	$start_date = date ( 'Y-m-j' , strtotime($fechainicialString));
-	    	//echo $start_date;
 	    	$end_year = $this->request->data['Product']['end']['year'];
     		$end_month = $this->request->data['Product']['end']['month'];
     		$end_day = $this->request->data['Product']['end']['day'];
     		$fechafinalString = $end_year . "-" . $end_month . "-" . $end_day . " 00:03";
 	    	$end_date = date ( 'Y-m-j' , strtotime($fechafinalString));
+	    	$corte = $this->request->data['Product']['corte'];
     	}else{
-    		$start_date = date('Y-m-01');//(new DateTime('first day of this month'))->format('jS, F Y'); //date('Y-m-d H:i:s'); // '2013-02-13'; //should be in YYYY-MM-DD format
-    	//	$start_date = date($start_date);
-    	//	echo $start_date;
-	    	$end_date = date('Y-m-31');//'2017-05-26'; //should be in YYYY-MM-DD format
+    		$start_date = date('Y-m-01');
+	    	$end_date = date('Y-m-31');
+	    	$corte = 15;
     	}
-	
 			$this->Paginator->settings  = array(
-			   // 'contain' => array('BillItem'),
 			    'joins' => array(
 			        array(
 			            'table' => 'bill_items',
@@ -277,23 +271,285 @@ class ProductsController extends AppController {
 			        )
 			    ),
 			    'conditions' => array(
-			        'Product.product_type' => 'recurrente',
-			        'BillItem.quantity' => 1,
+			        //'Product.product_type' => 'recurrente',
+			       // 'BillItem.quantity' => 1,
 			        'BillItem.created >= ' => $start_date,
 	      			'BillItem.created <= ' => $end_date
 			    ),
 			    'fields' => array(
-			    	'Product.id', 'Product.description', 'COUNT(Product.id) as Contador'	
+			    	'Product.id', 'Product.description', 'SUM(BillItem.quantity) as Cantidad'	
 			    ),
 			    'group' => 'Product.id',
-			    'order' => 'Contador ASC'
+			    'order' => 'Cantidad ASC',
+			    'limit' => $corte
 			);
-	
-			//$productList = $this->Product->find('all', $options);
-	
 			$this->set('listaProductos', $this->Paginator->paginate());
 			$this->set('fechainicio', $start_date);
 			$this->set('fechatermino', $end_date);
-    	
+			$this->set('corte', $corte);
     }
+    
+    public function prodstockcritico()
+    {
+    	if ($this->request->is('post')) {
+	    	$diferencia = $this->request->data['Product']['diferencia_stock'];
+    	}else{
+	    	$diferencia = 5;
+    	}
+			$this->Paginator->settings  = array(
+			    'conditions' => array(
+			        'Product.product_type' => 'recurrente',
+			        'Product.stock - Product.critical_stock < ' . ($diferencia + 1)
+			    ),
+			    'fields' => array(
+			    	'Product.id', 'Product.code', 'Product.description', 'Product.stock', 'Product.critical_stock'	
+			    ),
+			    'order' => 'Product.stock ASC'
+			);
+			$this->set('listaProductos', $this->Paginator->paginate());
+			$this->set('diferencia', $diferencia);
+    }
+    
+    public function exportreport2()
+	{
+	    if ($this->request->is('get')) {
+		    $diferencia = $this->params['url']['diferencia'];
+	    }else{
+	    	$diferencia = 5; 
+	    }
+	    $this->Paginator->settings  = array(
+		    'conditions' => array(
+		        'Product.product_type' => 'recurrente',
+		        'Product.stock - Product.critical_stock < ' . ($diferencia + 1)
+		    ),
+		    'fields' => array(
+		    	'Product.id', 'Product.code', 'Product.description', 'Product.stock', 'Product.critical_stock'	
+		    ),
+		    'order' => 'Product.stock ASC'
+		);
+		$this->set('products', $this->Paginator->paginate());
+		$this->layout = null;
+	    $this->autoLayout = false;
+	    Configure::write('debug','0');
+	}
+	
+	public function prodmasvendidos()
+    {
+    	if ($this->request->is('post')) {
+    		$start_year = $this->request->data['Product']['start']['year'];
+    		$start_month = $this->request->data['Product']['start']['month'];
+    		$start_day = $this->request->data['Product']['start']['day'];
+    		$fechainicialString = $start_year . "-" . $start_month . "-" . $start_day . " 00:01";
+	    	$start_date = date ( 'Y-m-j' , strtotime($fechainicialString));
+	    	$end_year = $this->request->data['Product']['end']['year'];
+    		$end_month = $this->request->data['Product']['end']['month'];
+    		$end_day = $this->request->data['Product']['end']['day'];
+    		$fechafinalString = $end_year . "-" . $end_month . "-" . $end_day . " 23:59";
+	    	$end_date = date ( 'Y-m-j' , strtotime($fechafinalString));
+	    	$end_date2 = date('Y-m-d', strtotime($end_date. ' + 1 days'));
+	    	$corte = $this->request->data['Product']['corte'];
+    	}else{
+    		$start_date = date('Y-m-01');
+	    	$end_date = date('Y-m-31');
+	    	$end_date2 = date('Y-m-d', strtotime($end_date. ' + 1 days'));
+	    	$corte = 10;
+    	}
+			$options  = array(
+			    'joins' => array(
+			        array(
+			            'table' => 'bill_items',
+			            'alias' => 'BillItem',
+			            'type' => 'LEFT',
+			            'conditions' => array(
+			                'BillItem.product_id = Product.id'
+			            )
+			        )
+			    ),
+			    'conditions' => array(
+			        'BillItem.created >= ' => $start_date,
+	      			'BillItem.created <= ' => $end_date2
+			    ),
+			    'fields' => array(
+			    	'Product.id', 'Product.description', 'Product.code', 'SUM(BillItem.quantity) as Suma'	
+			    ),
+			    'group' => 'Product.id',
+			    'order' => 'Suma DESC',
+			    'limit' => $corte
+			);
+
+			$this->set('listaProductos', $this->Product->find('all', $options));
+			$this->set('fechainicio', $start_date);
+			$this->set('fechatermino', $end_date);
+			$this->set('corte', $corte);
+    }
+    
+    public function exportreport3()
+	{
+	    if ($this->request->is('get')) {
+		    $start_date = $this->params['url']['start'];
+		    $end_date = $this->params['url']['end'];
+		    $end_date2 = date('Y-m-d', strtotime($end_date. ' + 1 days'));
+		    $corte = $this->params['url']['corte'];
+	    }else{
+	    	$start_date = date('Y-m-01'); 
+	    	$end_date = date('Y-m-31');
+	    	$end_date2 = date('Y-m-d', strtotime($end_date. ' + 1 days'));
+	    	$corte = 10;
+	    }
+    	$options  = array(
+		    'joins' => array(
+		        array(
+		            'table' => 'bill_items',
+		            'alias' => 'BillItem',
+		            'type' => 'LEFT',
+		            'conditions' => array(
+		                'BillItem.product_id = Product.id'
+		            )
+		        )
+		    ),
+		    'conditions' => array(
+		        'BillItem.created >= ' => $start_date,
+      			'BillItem.created <= ' => $end_date2
+		    ),
+		    'fields' => array(
+		    	'Product.id', 'Product.description', 'Product.code', 'SUM(BillItem.quantity) as Suma'	
+		    ),
+		    'group' => 'Product.id',
+		    'order' => 'Suma DESC',
+		    'limit' => $corte
+		);
+		$this->set('products', $this->Product->find('all', $options));
+		$this->layout = null;
+	    $this->autoLayout = false;
+	    Configure::write('debug','0');
+	}
+	
+	
+	public function ventasporproducto()
+    {
+    	if ($this->request->is('post')) {
+    		$start_year = $this->request->data['Product']['start']['year'];
+    		$start_month = $this->request->data['Product']['start']['month'];
+    		$start_day = $this->request->data['Product']['start']['day'];
+    		$fechainicialString = $start_year . "-" . $start_month . "-" . $start_day . " 00:01";
+	    	$start_date = date ( 'Y-m-j' , strtotime($fechainicialString));
+	    	$end_year = $this->request->data['Product']['end']['year'];
+    		$end_month = $this->request->data['Product']['end']['month'];
+    		$end_day = $this->request->data['Product']['end']['day'];
+    		$fechafinalString = $end_year . "-" . $end_month . "-" . $end_day . " 23:59";
+	    	$end_date = date ( 'Y-m-j' , strtotime($fechafinalString));
+	    	$end_date2 = date('Y-m-d', strtotime($end_date. ' + 1 days'));
+	    //	$corte = $this->request->data['Product']['corte'];
+    	}else{
+    		$start_date = date('Y-m-01');
+	    	$end_date = date('Y-m-31');
+	    	$end_date2 = date('Y-m-d', strtotime($end_date. ' + 1 days'));
+	    	//$corte = 10;
+    	}
+			$this->Paginator->settings  = array(
+			    'joins' => array(
+			        array(
+			            'table' => 'bill_items',
+			            'alias' => 'BillItem',
+			            'type' => 'LEFT',
+			            'conditions' => array(
+			                'BillItem.product_id = Product.id'
+			            )
+			        ),
+			        array(
+			            'table' => 'bills',
+			            'alias' => 'Bill',
+			            'type' => 'LEFT',
+			            'conditions' => array(
+			                'Bill.id = BillItem.bill_id'
+			            )
+			        )
+			    ),
+			    'conditions' => array(
+			        'BillItem.created >= ' => $start_date,
+	      			'BillItem.created <= ' => $end_date2
+			    ),
+			    'fields' => array(
+			    	'Product.id', 'Product.description', 'Product.code', 'BillItem.quantity', 'BillItem.created', 'Bill.bill_number', 'Bill.id'	
+			    ),
+			    'order' => 'Product.id ASC'
+			    //'limit' => $corte
+			);
+
+			$this->set('listaProductos', $this->Paginator->paginate());
+			$this->set('fechainicio', $start_date);
+			$this->set('fechatermino', $end_date);
+			//$this->set('corte', $corte);
+    }
+    
+    public function exportreport6()
+	{
+		$this->Product->recursive = 0;
+	    if ($this->request->is('get')) {
+		    $start_date = $this->params['url']['start'];
+		    $end_date = $this->params['url']['end'];
+		    $end_date2 = date('Y-m-d', strtotime($end_date. ' + 1 days'));
+		    //$corte = $this->params['url']['corte'];
+	    }else{
+	    	$start_date = date('Y-m-01'); 
+	    	$end_date = date('Y-m-31');
+	    	$end_date2 = date('Y-m-d', strtotime($end_date. ' + 1 days'));
+	    	//$corte = 10;
+	    }
+    	$options  = array(
+		    'joins' => array(
+		        array(
+		            'table' => 'bill_items',
+		            'alias' => 'BillItem',
+		            'type' => 'LEFT',
+		            'conditions' => array(
+		                'BillItem.product_id = Product.id'
+		            )
+		        ),
+		        array(
+		            'table' => 'bills',
+		            'alias' => 'Bill',
+		            'type' => 'LEFT',
+		            'conditions' => array(
+		                'Bill.id = BillItem.bill_id'
+		            )
+		        )
+		    ),
+		    'conditions' => array(
+		        'BillItem.created >= ' => $start_date,
+      			'BillItem.created <= ' => $end_date2
+		    ),
+		    'fields' => array(
+		    	'Product.id', 'Product.code', 'Product.description', 'BillItem.quantity', 'BillItem.created', 'Bill.bill_number', 'Bill.id'	
+		    ),
+		    'order' => 'Product.id ASC'
+		);
+		$this->set('products', $this->Product->find('all', $options));
+		$this->layout = null;
+	    $this->autoLayout = false;
+	    Configure::write('debug','0');
+	}
+	
+	public function addstock() {
+		
+		if ($this->request->is('post')) {
+			$options = array('conditions' => array('Product.code' => $this->request->data['Product']['code']));
+			$producto = $this->Product->find('first', $options);
+			if($producto){
+				$nuevoStock = $this->request->data['Product']['stock'] + $producto['Product']['stock'];
+				$this->Product->id = $producto['Product']['id'];
+				if ($this->Product->saveField('stock', $nuevoStock)) {
+					$this->Flash->success(__('El stock para el producto ' . $producto['Product']['code'] . ' ha sido modificado.'));
+					//return $this->redirect(array('action' => 'index'));
+				} else {
+					$this->Flash->error(__('El stock no pudo ser modificado.'));
+				}
+			}else{
+				$this->Flash->error(__('No existe un producto con ese código.'));
+			}
+		} else {
+			//nada
+		}
+	}
+
 }

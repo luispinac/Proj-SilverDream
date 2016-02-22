@@ -28,7 +28,15 @@
     <div class="jumbotron">
       <div class="container">
         <h1>Bienvenido...</h1>
-        <p>Le proponemos vivir de una manera distinta una comida de negocios, un evento familiar o simplemente una cena con amigos. Podemos ofrecerle diferentes menúsajustándose a las estaciones y temporadas de los productos, así como a las celebraciones tradicionales del año..</p>
+        <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit,
+        sed diam nonummy nibh euismod tincidunt ut laoreet dolore
+        magna aliquam erat volutpat. Ut wisi enim ad minim veniam,
+        quis nostrud exerci tation ullamcorper suscipit lobortis nisl
+        ut aliquip ex ea commodo consequat. Duis autem vel eum iriure
+        dolor in hendrerit in vulputate velit esse molestie consequat,
+        vel illum dolore eu feugiat nulla facilisis at vero eros et
+        accumsan et iusto odio dignissim qui blandit praesent luptatum
+        zzril delenit augue duis dolore te feugait nulla facilisi.</p>
         <p><a class="btn btn-primary btn-lg" href="#" role="button">Leer más &raquo;</a></p>
       </div>
     </div>
@@ -37,18 +45,30 @@
       <!-- Example row of columns -->
       <div class="row">
         <div class="col-md-4">
-          <h2>Menús para grupos</h2>
-          <p>Disponemos de menús para grupos, elaborados con todo detalle para que cualquier evento que celebre sea un éxito. </p>
+          <h2>Sección 1</h2>
+          <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit,
+          sed diam nonummy nibh euismod tincidunt ut laoreet dolore
+          magna aliquam erat volutpat. Ut wisi enim ad minim veniam,
+          quis nostrud exerci tation ullamcorper suscipit lobortis nisl
+          ut aliquip ex ea commodo consequat. </p>
           <p><a class="btn btn-default" href="#" role="button">Ver detalles &raquo;</a></p>
         </div>
         <div class="col-md-4">
-          <h2>Nuestras Tentaciones</h2>
-          <p>Pregunte por nuestras sugerencias, todos nuestros platos son excelentes, una auténtica tentación para los sentidos. </p>
+          <h2>Sección 2</h2>
+          <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit,
+          sed diam nonummy nibh euismod tincidunt ut laoreet dolore
+          magna aliquam erat volutpat. Ut wisi enim ad minim veniam,
+          quis nostrud exerci tation ullamcorper suscipit lobortis nisl
+          ut aliquip ex ea commodo consequat. </p>
           <p><a class="btn btn-default" href="#" role="button">Ver detalles &raquo;</a></p>
        </div>
         <div class="col-md-4">
-          <h2>Menú de temporada</h2>
-          <p>Descubra una escogida selección de platos que el chef actualiza cada temporada ajustándose a las estaciones y temporadas de los productos.</p>
+          <h2>Sección 3</h2>
+          <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit,
+          sed diam nonummy nibh euismod tincidunt ut laoreet dolore
+          magna aliquam erat volutpat. Ut wisi enim ad minim veniam,
+          quis nostrud exerci tation ullamcorper suscipit lobortis nisl
+          ut aliquip ex ea commodo consequat.</p>
           <p><a class="btn btn-default" href="#" role="button">Ver detalles &raquo;</a></p>
         </div>
       </div>
@@ -56,6 +76,6 @@
       <hr>
 
       <footer>
-        <p>&copy; Restaurante Chefcito 2015</p>
+        <p>&copy; Joyería Silver Dream 2015</p>
       </footer>
     </div> <!-- /container -->

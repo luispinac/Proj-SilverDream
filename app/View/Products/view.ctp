@@ -56,6 +56,22 @@
 		Categoría: <?php echo $this->Html->link($product['Category']['category_name'], array('controller' => 'categories', 'action' => 'view', $product['Category']['id'])); ?>
 		<br />
 		<br />
+		<?php if($current_user['role'] == 'admin'): ?>
+		<div class="btn-group">
+		  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+		    <?php echo __('Acciones'); ?> <span class="caret"></span>
+		  </button>
+		  <ul class="dropdown-menu" role="menu">
+			<li><?php echo $this->Html->link(__('Editar Producto'), array('action' => 'edit', $product['Product']['id'])); ?> </li>
+			<li><?php echo $this->Form->postLink(__('Eliminar Producto'), array('action' => 'delete', $product['Product']['id']), array(), __('Está seguro que desea eliminar el producto con código %s?', $product['Product']['code'])); ?> </li>
+			<li><?php echo $this->Html->link(__('Listar Productos'), array('action' => 'index')); ?> </li>
+			<li><?php echo $this->Html->link(__('Nuevo Producto'), array('action' => 'add')); ?> </li>
+		    <li class="divider"></li>
+			<li><?php echo $this->Html->link(__('Lista de Categorías'), array('controller' => 'categories', 'action' => 'index')); ?> </li>
+			<li><?php echo $this->Html->link(__('Nueva Categoría'), array('controller' => 'categories', 'action' => 'add')); ?> </li>
+		  </ul>
+		</div>
+		<?php endif; ?>
 
 	</div>
 

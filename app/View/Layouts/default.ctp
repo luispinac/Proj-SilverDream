@@ -14,8 +14,9 @@
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
-$cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework');
-$cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
+$cakeDescription = __d('cake_dev', 'Silver Dream - Sistema Inventario');
+$cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version());
+date_default_timezone_set('America/Santiago');
 ?>
 <!DOCTYPE html>
 <html>

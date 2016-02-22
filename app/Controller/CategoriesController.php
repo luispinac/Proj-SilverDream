@@ -84,7 +84,7 @@ class CategoriesController extends AppController {
 
 	//	$this->paginate['Product']['limit'] = 4;
 		$this->paginate['Product']['conditions'] = array('Product.category_id' => $categoryId);
-		$this->paginate['Product']['fields'] = array('Product.id', 'Product.code', 'Product.price', 'Product.photo', 'Product.photo_dir', 'Product.category_id');
+		$this->paginate['Product']['fields'] = array('Product.id', 'Product.code', 'Product.price', 'Product.photo', 'Product.photo_dir', 'Product.category_id', 'Product.stock');
 
 		// Categoría Platillo
 		$productCat = $catList['Category']['category_name'];
